@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Analysis</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Analysis</h1>
+
+        <form method="POST" action="/">
+            <!-- Stock input -->
+            <label for="stock">Stock Ticker:</label>
+            <input type="text" id="stock" name="stock" required>
+
+            <!-- Time frame input -->
+            <label for="time_frame">Time Frame:</label>
+            <select id="time_frame" name="time_frame" required>
+                <option value="1d">1 Day</option>
+                <option value="1wk">1 Week</option>
+                <option value="1mo">1 Month</option>
+            </select>
+
+            <!-- Chart selection inputs -->
+            <label>Charts:</label>
+            <div>
+                <input type="checkbox" id="sma" name="chart" value="sma">
+                <label for="sma">SMA</label>
+            </div>
+            <div>
+                <input type="checkbox" id="rsi" name="chart" value="rsi">
+                <label for="rsi">RSI</label>
+            </div>
+            <div>
+                <input type="checkbox" id="obv" name="chart" value="obv">
+                <label for="obv">OBV</label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if stock %}
+        <h2>Stock: {{ stock }}</h2>
+
+        {% if display_sma %}
+        <img src="{{ url_for('serve_chart', filename=stock + '_close_sma.png') }}" alt="Close vs. SMA 50">
+        {% endif %}
+
+        {% if display_rsi %}
+        <img src="{{ url_for('serve_chart', filename=stock + '_rsi.png') }}" alt="RSI">
+        {% endif %}
+
+        {% if display_obv %}
+        <img src="{{ url_for('serve_chart', filename=stock + '_obv.png') }}" alt="OBV">
+        {% endif %}
+        {% endif %}
+    </div>
+
+</body>
+</html>

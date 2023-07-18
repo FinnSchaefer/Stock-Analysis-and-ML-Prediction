@@ -38,6 +38,13 @@
                 </div>
             </div>
 
+            <!-- Fundamental analysis selection -->
+            <div class="input-container">
+                <label for="fundamental">Fundamental Analysis:</label>
+                <input type="checkbox" id="fundamental" name="chart" value="fundamental">
+                <label for="fundamental">Fundamental</label>
+            </div>
+
             <!-- Submit button -->
             <div class="button-container">
                 <button type="submit" class="submit-button">Submit</button>
@@ -69,6 +76,24 @@
                 <p>{{ writeups.obv }}</p>
                 <div class="chart-container">
                     <img src="{{ url_for('serve_chart', filename=(stock ~ '_obv.png')) }}" alt="OBV">
+                </div>
+            {% endif %}
+
+            {% if fundamentals and display_fundamental %}
+                <h3>Fundamental Analysis:</h3>
+                <div class="fundamentals-container">
+                    <table>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Value</th>
+                        </tr>
+                        {% for key, value in fundamentals.items() %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             {% endif %}
         {% endif %}

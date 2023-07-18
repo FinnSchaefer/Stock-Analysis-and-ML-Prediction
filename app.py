@@ -3,14 +3,16 @@ import yfinance as yf
 from charts import delete_chart_files, generate_sma_chart, generate_rsi_chart, generate_obv_chart
 from technical_analysis import calculate_rsi, calculate_obv
 from writeup import generate_sma_writeup, generate_rsi_writeup, generate_obv_writeup
+from fundamentals import get_fundamentals
 
 app = Flask(__name__, static_url_path='/static')
 
 
 @app.route('/',methods=['GET', 'POST'])
-#place holder home page
+#placeholder home page
 def index():
-    return render_template('index.html')
+    return render_template('analysis.html')
+
 
 @app.route('/main', methods=['GET', 'POST'])
 def main():
@@ -20,6 +22,7 @@ def main():
         display_sma = 'sma' in request.form.getlist('chart')
         display_rsi = 'rsi' in request.form.getlist('chart')
         display_obv = 'obv' in request.form.getlist('chart')
+        display_fundamental = 'fundamental' in request.form.getlist('chart')
         
         stock = yf.Ticker(stock_symbol)
 
@@ -57,7 +60,12 @@ def main():
         if display_obv:
             writeups['obv'] = generate_obv_writeup(stock_symbol, obv)
 
-        return render_template('analysis.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv, time_frame=time_frame, writeups=writeups)
+        # Perform fundamental analysis
+        fundamentals = {}
+        if display_fundamental:
+            fundamentals = get_fundamentals(stock_symbol)
+
+        return render_template('analysis.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv, display_fundamental=display_fundamental, time_frame=time_frame, writeups=writeups, fundamentals=fundamentals)
 
     return render_template('analysis.html')
 

@@ -80,3 +80,32 @@ form {
     align-items: center;
     justify-content: center;
 }
+
+.fundamentals-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.loading-bar {
+    height: 5px;
+    background-color: #4caf50;
+    width: 0%;
+    transition: width 0.5s ease;
+}

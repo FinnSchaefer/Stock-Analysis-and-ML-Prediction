@@ -15,11 +15,7 @@
 
             <!-- Time frame input -->
             <label for="time_frame">Time Frame:</label>
-            <select id="time_frame" name="time_frame" required>
-                <option value="1d">1 Day</option>
-                <option value="1wk">1 Week</option>
-                <option value="1mo">1 Month</option>
-            </select>
+            <input type="text" id="time_frame" name="time_frame" placeholder="Enter number of days" required>
 
             <!-- Chart selection inputs -->
             <label>Charts:</label>
@@ -41,19 +37,26 @@
         </form>
 
         {% if stock %}
-        <h2>Stock: {{ stock }}</h2>
+            <h2>Stock: {{ stock }}</h2>
 
-        {% if display_sma %}
-        <img src="{{ url_for('serve_chart', filename=stock + '_close_sma.png') }}" alt="Close vs. SMA 50">
-        {% endif %}
+            {% if writeups.sma and display_sma %}
+                <h3>SMA Analysis:</h3>
+                <p>{{ writeups.sma }}</p>
+                <img src="{{ url_for('serve_chart', filename=(stock ~ '_close_sma.png')) }}" alt="Close vs. SMA 50">
+            {% endif %}
 
-        {% if display_rsi %}
-        <img src="{{ url_for('serve_chart', filename=stock + '_rsi.png') }}" alt="RSI">
-        {% endif %}
+            {% if writeups.rsi and display_rsi %}
+                <h3>RSI Analysis:</h3>
+                <p>{{ writeups.rsi }}</p>
+                <img src="{{ url_for('serve_chart', filename=(stock ~ '_rsi.png')) }}" alt="RSI">
+            {% endif %}
 
-        {% if display_obv %}
-        <img src="{{ url_for('serve_chart', filename=stock + '_obv.png') }}" alt="OBV">
-        {% endif %}
+            {% if writeups.obv and display_obv %}
+                <h3>OBV Analysis:</h3>
+                <p>{{ writeups.obv }}</p>
+                <img src="{{ url_for('serve_chart', filename=(stock ~ '_obv.png')) }}" alt="OBV">
+            {% endif %}
+            
         {% endif %}
     </div>
 

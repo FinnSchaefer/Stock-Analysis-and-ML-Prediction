@@ -1,20 +1,22 @@
 from flask import Flask, render_template, request, send_from_directory
 import yfinance as yf
-import matplotlib.pyplot as plt
-import os
+from charts import delete_chart_files, generate_sma_chart, generate_rsi_chart, generate_obv_chart
+from technical_analysis import calculate_rsi, calculate_obv
+from writeup import generate_sma_writeup, generate_rsi_writeup, generate_obv_writeup
 
-CHARTS_FOLDER = 'charts'  # Folder name for storing chart files
 app = Flask(__name__, static_url_path='/static')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         stock_symbol = request.form['stock']
-        time_frame = request.form['time_frame']
+        time_frame = request.form['time_frame'] + 'd'
         display_sma = 'sma' in request.form.getlist('chart')
         display_rsi = 'rsi' in request.form.getlist('chart')
         display_obv = 'obv' in request.form.getlist('chart')
-
+        
+        print(f"Time Frame: {time_frame}")  # Add this line to print the value
         stock = yf.Ticker(stock_symbol)
 
         # Fetch stock data
@@ -40,89 +42,26 @@ def index():
             obv = calculate_obv(close_prices, volume)
             generate_obv_chart(data.index[1:], obv, stock_symbol)
 
-        return render_template('index.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv)
+        # Generate write-ups
+        writeups = {}
+        if display_sma:
+            writeups['sma'] = generate_sma_writeup(stock_symbol, sma_50)
+
+        if display_rsi:
+            writeups['rsi'] = generate_rsi_writeup(stock_symbol, rsi_14)
+
+        if display_obv:
+            writeups['obv'] = generate_obv_writeup(stock_symbol, obv)
+
+        return render_template('index.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv, time_frame=time_frame, writeups=writeups)
 
     return render_template('index.html')
 
-@app.route('/charts/<path:filename>')
+
+@app.route('/static/charts/<path:filename>')
 def serve_chart(filename):
-    return send_from_directory(os.path.join(app.root_path, CHARTS_FOLDER), filename)
-
-def delete_chart_files():
-    directory = os.path.join(app.root_path, CHARTS_FOLDER)
-    for file in os.listdir(directory):
-        if file.endswith(".png"):
-            os.remove(os.path.join(directory, file))
-
-def generate_sma_chart(close_prices, sma, stock_symbol):
-    plt.figure(figsize=(12, 6))
-    plt.plot(close_prices, label='Close')
-    plt.plot(sma, label='SMA 50')
-    plt.legend()
-    plt.title('Stock Analysis - Close Prices and SMA 50')
-    plt.xlabel('Date')
-    plt.ylabel('Price')
-    close_sma_path = f'{stock_symbol}_close_sma.png'
-    plt.savefig(os.path.join(app.root_path, CHARTS_FOLDER, close_sma_path))
-
-def generate_rsi_chart(close_prices, rsi, stock_symbol):
-    plt.figure(figsize=(12, 6))
-    plt.plot(rsi, label='RSI')
-    plt.axhline(y=70, color='r', linestyle='--')
-    plt.axhline(y=30, color='g', linestyle='--')
-    plt.legend()
-    plt.title('Stock Analysis - RSI')
-    plt.xlabel('Date')
-    plt.ylabel('RSI')
-    rsi_path = f'{stock_symbol}_rsi.png'
-    plt.savefig(os.path.join(app.root_path, CHARTS_FOLDER, rsi_path))
-
-def generate_obv_chart(x, obv, stock_symbol):
-    plt.figure(figsize=(12, 6))
-    plt.plot(x, obv, color='blue', linewidth=1)
-    # Fill positive and negative areas
-    for i in range(1, len(x)):
-        if obv[i] >= 0:
-            plt.fill_between([x[i - 1], x[i]], [0, 0], [obv[i - 1], obv[i]], color='green', alpha=0.5)
-        else:
-            plt.fill_between([x[i - 1], x[i]], [0, 0], [obv[i - 1], obv[i]], color='red', alpha=0.5)
-    plt.axhline(y=0, color='black', linestyle='--')
-    plt.title('Stock Analysis - OBV')
-    plt.xlabel('Date')
-    plt.ylabel('OBV')
-    plt.xticks(rotation=45, ha='right')
-    plt.subplots_adjust(bottom=0.2)
-
-    obv_path = f'{stock_symbol}_obv.png'
-    plt.savefig(os.path.join(app.root_path, CHARTS_FOLDER, obv_path))
-
-
-def calculate_rsi(prices, window=14):
-    delta = prices.diff()
-    gains, losses = delta.copy(), delta.copy()
-    gains[gains < 0] = 0
-    losses[losses > 0] = 0
-    avg_gain = gains.rolling(window).mean()
-    avg_loss = abs(losses.rolling(window).mean())
-    rs = avg_gain / avg_loss
-    rsi = 100.0 - (100.0 / (1.0 + rs))
-    return rsi
-
-def calculate_obv(close_prices, volume):
-    obv = []
-    prev_obv = 0
-    for i in range(1, len(close_prices)):
-        if close_prices[i] > close_prices[i - 1]:
-            current_obv = prev_obv + volume[i]
-        elif close_prices[i] < close_prices[i - 1]:
-            current_obv = prev_obv - volume[i]
-        else:
-            current_obv = prev_obv
-        obv.append(current_obv)
-        prev_obv = current_obv
-    return obv
-
+    return send_from_directory('static/charts', filename)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

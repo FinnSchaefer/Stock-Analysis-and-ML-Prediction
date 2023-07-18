@@ -1,64 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Analysis</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Stock Analysis - Home</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index-style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Stock Analysis</h1>
-
-        <form method="POST" action="/">
-            <!-- Stock input -->
-            <label for="stock">Stock Ticker:</label>
-            <input type="text" id="stock" name="stock" required>
-
-            <!-- Time frame input -->
-            <label for="time_frame">Time Frame:</label>
-            <input type="text" id="time_frame" name="time_frame" placeholder="Enter number of days" required>
-
-            <!-- Chart selection inputs -->
-            <label>Charts:</label>
-            <div>
-                <input type="checkbox" id="sma" name="chart" value="sma">
-                <label for="sma">SMA</label>
-            </div>
-            <div>
-                <input type="checkbox" id="rsi" name="chart" value="rsi">
-                <label for="rsi">RSI</label>
-            </div>
-            <div>
-                <input type="checkbox" id="obv" name="chart" value="obv">
-                <label for="obv">OBV</label>
-            </div>
-
-            <!-- Submit button -->
-            <button type="submit">Submit</button>
-        </form>
-
-        {% if stock %}
-            <h2>Stock: {{ stock }}</h2>
-
-            {% if writeups.sma and display_sma %}
-                <h3>SMA Analysis:</h3>
-                <p>{{ writeups.sma }}</p>
-                <img src="{{ url_for('serve_chart', filename=(stock ~ '_close_sma.png')) }}" alt="Close vs. SMA 50">
-            {% endif %}
-
-            {% if writeups.rsi and display_rsi %}
-                <h3>RSI Analysis:</h3>
-                <p>{{ writeups.rsi }}</p>
-                <img src="{{ url_for('serve_chart', filename=(stock ~ '_rsi.png')) }}" alt="RSI">
-            {% endif %}
-
-            {% if writeups.obv and display_obv %}
-                <h3>OBV Analysis:</h3>
-                <p>{{ writeups.obv }}</p>
-                <img src="{{ url_for('serve_chart', filename=(stock ~ '_obv.png')) }}" alt="OBV">
-            {% endif %}
-            
-        {% endif %}
+    <div class="landing-page">
+        <h1 class="landing-title">Stock Analysis</h1>
+        <a href="/main" class="start-button">Start Now</a>
     </div>
-
 </body>
 </html>

@@ -7,8 +7,13 @@ from writeup import generate_sma_writeup, generate_rsi_writeup, generate_obv_wri
 app = Flask(__name__, static_url_path='/static')
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/',methods=['GET', 'POST'])
+#place holder home page
 def index():
+    return render_template('index.html')
+
+@app.route('/main', methods=['GET', 'POST'])
+def main():
     if request.method == 'POST':
         stock_symbol = request.form['stock']
         time_frame = request.form['time_frame'] + 'd'
@@ -16,7 +21,6 @@ def index():
         display_rsi = 'rsi' in request.form.getlist('chart')
         display_obv = 'obv' in request.form.getlist('chart')
         
-        print(f"Time Frame: {time_frame}")  # Add this line to print the value
         stock = yf.Ticker(stock_symbol)
 
         # Fetch stock data
@@ -53,9 +57,9 @@ def index():
         if display_obv:
             writeups['obv'] = generate_obv_writeup(stock_symbol, obv)
 
-        return render_template('index.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv, time_frame=time_frame, writeups=writeups)
+        return render_template('analysis.html', stock=stock_symbol, display_sma=display_sma, display_rsi=display_rsi, display_obv=display_obv, time_frame=time_frame, writeups=writeups)
 
-    return render_template('index.html')
+    return render_template('analysis.html')
 
 
 @app.route('/static/charts/<path:filename>')

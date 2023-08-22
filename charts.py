@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
+plt.switch_backend('Agg') 
 CHARTS_FOLDER = 'static/charts'  # Folder name for storing chart files
 directory = os.path.join(os.path.dirname(__file__), CHARTS_FOLDER)
 

@@ -6,8 +6,6 @@ from writeup import generate_sma_writeup, generate_rsi_writeup, generate_obv_wri
 from fundamentals import get_fundamentals
 
 app = Flask(__name__, static_url_path='/static')
-
-
 @app.route('/',methods=['GET', 'POST'])
 #placeholder home page
 def index():

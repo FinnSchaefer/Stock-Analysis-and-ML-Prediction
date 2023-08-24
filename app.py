@@ -4,6 +4,7 @@ from charts import delete_chart_files, generate_sma_chart, generate_rsi_chart, g
 from technical_analysis import calculate_rsi, calculate_obv
 from writeup import generate_sma_writeup, generate_rsi_writeup, generate_obv_writeup
 from fundamentals import get_fundamentals
+from model import StockESNModel
 
 app = Flask(__name__, static_url_path='/static')
 @app.route('/',methods=['GET', 'POST'])

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='prediction-style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Prediction</h1>
+
+        <form method="POST" action="/prediction">
+            <!-- Stock input -->
+            <div class="input-container">
+                <label for="stock">Stock Ticker:</label>
+                <input type="text" id="stock" name="stock" required>
+            </div>
+            
+            <div class="button-container">
+                <button id="predict-button" class="submit-button">Predict</button>
+                <button id="train-button" class="submit-button">Train</button>
+                <div class="loading-bar"></div>
+            </div>
+        </form>
+
+        {% if stock %}
+            <h2>Stock: {{ stock }}</h2>
+
+            {% if prediction_chart %}
+                <h3>Predicted vs Actual Price:</h3>
+                <div class="chart-container">
+                    <img src="{{ url_for('serve_chart', filename=prediction_chart) }}" alt="Predicted vs Actual Price">
+                </div>
+            {% endif %}
+
+            {% if predicted_price %}
+                <h3>Tomorrow's Predicted Price:</h3>
+                <p>{{ predicted_price }}</p>
+            {% endif %}
+
+            <!-- Add other model outputs here if needed -->
+
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Analysis - Home</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index-style.css') }}">
+    <title>Stock Analysis and Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='analysis-style.css') }}">
 </head>
 <body>
-    <div class="landing-page">
-        <h1 class="landing-title">Stock Analysis</h1>
-        <a href="/main" class="start-button">Start Now</a>
+    <div class="container">
+        <h1>Stock Analysis and Prediction</h1>
+
+        <!-- Analysis Button -->
+        <div class="button-container">
+            <a href="{{ url_for('analysis') }}" class="submit-button">Analysis</a>
+        </div>
+
+        <!-- Prediction Button -->
+        <div class="button-container">
+            <a href="{{ url_for('prediction') }}" class="submit-button">Prediction</a>
+        </div>
     </div>
 </body>
 </html>

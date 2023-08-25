@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow_addons.layers import ESN
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 import os
 
 class StockESNModel:
@@ -82,6 +82,18 @@ class StockESNModel:
                 best_params = params
 
         return best_params, best_mse
+    
+    def plot_predicted_vs_actual(self, predicted, actual):
+        save_path = 'static/charts/predicted_vs_actual.png'  # Static save path
+        plt.figure(figsize=(12, 6))
+        plt.plot(actual, label='Actual Price')
+        plt.plot(predicted, label='Predicted Price')
+        plt.xlabel('Time')
+        plt.ylabel('Price')
+        plt.title('Predicted vs Actual Stock Price')
+        plt.legend()
+        plt.savefig(save_path)
+        plt.close()
     
     def custom_loss(self, y_true, y_pred):
         #implement later

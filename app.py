@@ -85,7 +85,7 @@ def prediction():
         close_prices = data['Close'].values
         input_data = np.expand_dims(close_prices, axis=0)
 
-        model = StockESNModel.load_model('your_model_filename.h5')  # Load your trained model here
+        model = StockESNModel.load_model(f'{stock_symbol}_model.h5')  # Load your trained model here
         predicted_prices = model.predict(input_data)
 
         tomorrow_predicted_price = predicted_prices[0][-1]  # Get the prediction for the next day
@@ -97,7 +97,7 @@ def prediction():
 
     return render_template('prediction.html')
 
-@app.route('/train', methods=['POST'])
+@app.route('/train', methods=['GET','POST'])
 def train():
     stock_symbol = request.form['stock']
     stock = yf.Ticker(stock_symbol)

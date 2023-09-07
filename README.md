@@ -5,5 +5,5 @@ each chart.
 More of a work in progress. Utilizes tensorflows addon libraries to create an Echo State Network for time series prediciton on the yfinance pulled data frames.
 
 # To Do
-⌧ Get the Model properly generated using the flask website application
+⌧ Get the Model properly generated using the flask website application.<br />
 ☑ Get some analysis set up and properly displaying with charts and writeups.
